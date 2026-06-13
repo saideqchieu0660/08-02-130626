@@ -24,6 +24,7 @@ export interface User {
   title?: string;
   
   averageMastery?: number; // Real-time overall average learning mastery (0 - 100)
+  top1Weeks?: number; // Số tuần ngự trị ngôi vương Top 1
 }
 
 export interface Flashcard {

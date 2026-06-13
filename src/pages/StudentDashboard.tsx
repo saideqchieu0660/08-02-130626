@@ -1654,7 +1654,13 @@ export default function StudentDashboard() {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
          >
-             <StudentBadges points={user?.points || 0} streak={user?.streak || 0} />
+             <StudentBadges 
+                points={user?.points || 0} 
+                streak={user?.streak || 0} 
+                top1Weeks={Math.max(user?.top1Weeks || 0, (sortedUsers.length > 0 && sortedUsers[0].id === user?.id && (user?.points || 0) > 0) ? 1 : 0)}
+                studyMinutesThisWeek={(studyHours * 60) + studyMinutes}
+                averageMastery={user?.averageMastery || 0}
+             />
          </motion.div>
        )}
 
