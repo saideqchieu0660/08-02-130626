@@ -1730,8 +1730,10 @@ KHÔNG sử dụng Markdown code block. TRẢ VỀ ĐÚNG MỘT OBJECT JSON DUY 
       let styleGuidance = "";
       if (responseStyle === "detailed") {
         styleGuidance = `\nPHONG CÁCH TRẢ LỜI - GIẢI THÍCH CHI TIẾT (DETAILED MODE):
-- Tập trung phân tích chuyên sâu nguồn gốc vấn đề.
-- Cung cấp lời giải thích của mày một cách chi tiết, cặn kẽ, dài dặn, kèm theo ít nhất 1-2 ví dụ minh họa sinh động. Kéo dài lập luận, phân tích các khía cạnh liên quan giúp học sinh thực sự hiểu sâu sắc, đa chiều.`;
+- BẮT BUỘC: Tập trung phân tích chuyên sâu nguồn gốc vấn đề từ cốt lõi, thấu gốc rễ, phân nhỏ các khía cạnh bằng các đề mục lớn (H3/H4), bullet points rõ ràng và thẩm mỹ.
+- BẮT BUỘC: Trả lời cực kỳ dài dặn, giải thích dồi dào, cặn kẽ và phong phú (độ dài tối thiểu từ 3-5 đoạn văn dài, ít nhất 300 từ).
+- BẮT BUỘC: Cung cấp ít nhất 1-2 ví dụ minh họa thực tế sinh động, cụ thể để người học dễ dàng hình dung.
+- BẮT BUỘC: Tuyệt đối bỏ qua hoàn toàn tất cả các yêu cầu viết ngắn gọn! Tuyệt đối không trả lời lướt qua sơ sài hay để đáp án cụp ngủn chỉ có vài từ hoặc vài câu ngắn!`;
       } else if (responseStyle === "debate") {
         styleGuidance = `\nPHONG CÁCH TRẢ LỜI - TRANH BIỆN (DEBATE MODE):
 - Đóng vai là đối thủ tranh luận gắt gao, hiếu chiến và cực kỳ sắc bén (Devil's Advocate).
@@ -1744,7 +1746,7 @@ KHÔNG sử dụng Markdown code block. TRẢ VỀ ĐÚNG MỘT OBJECT JSON DUY 
       }
 
       let conciseModeGuidance = "";
-      if (isConciseMode) {
+      if (isConciseMode && responseStyle !== "detailed") {
         conciseModeGuidance = `\nCHẾ ĐỘ TRẢ LỜI NGẮN (CONCISE MODE) ĐANG BẬT:
 - Chỉ trả lời thẳng vào vấn đề, bỏ qua hoàn toàn các lời chào hỏi dẫn dắt, giải thích vòng vo hay hỏi ngược lại dài dòng. Trả lời cực kỳ ngắn gọn (chỉ 1-2 câu) và trực tiếp.`;
       }

@@ -79,11 +79,19 @@ export default function Agent3Widget() {
   const handleToggleResponseStyle = (style: "concise" | "detailed" | "debate") => {
     setResponseStyle(style);
     localStorage.setItem("agent3_response_style", style);
+    if (style === "detailed") {
+      setIsConciseMode(false);
+      localStorage.setItem("agent3_concise_mode", "false");
+    }
   };
 
   const handleToggleConciseMode = (val: boolean) => {
     setIsConciseMode(val);
     localStorage.setItem("agent3_concise_mode", val ? "true" : "false");
+    if (val) {
+      setResponseStyle("concise");
+      localStorage.setItem("agent3_response_style", "concise");
+    }
   };
 
   const [existingSets, setExistingSets] = useState<any[]>([]);
