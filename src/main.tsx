@@ -6,6 +6,41 @@ import './index.css';
 import { SoundProvider } from './components/SoundProvider';
 import { unregisterServiceWorker } from './lib/serviceWorkerRegistration';
 
+// Defensive Canvas polyfill to prevent "canvas.getBoundingClientRect is not a function" crashes
+try {
+  if (typeof window !== "undefined") {
+    // 1. Regular Canvas
+    if (typeof HTMLCanvasElement !== "undefined" && !HTMLCanvasElement.prototype.getBoundingClientRect) {
+      HTMLCanvasElement.prototype.getBoundingClientRect = function() {
+        return { width: this.width || 0, height: this.height || 0, top: 0, left: 0, right: this.width || 0, bottom: this.height || 0, x: 0, y: 0, toJSON: () => this };
+      };
+    }
+    
+    // 2. OffscreenCanvas (frequently used by tsparticles)
+    if (typeof OffscreenCanvas !== "undefined") {
+      OffscreenCanvas.prototype.getBoundingClientRect = OffscreenCanvas.prototype.getBoundingClientRect || function() {
+        return { width: this.width || 0, height: this.height || 0, top: 0, left: 0, right: this.width || 0, bottom: this.height || 0, x: 0, y: 0, toJSON: () => this };
+      };
+    }
+
+    // 3. Fallback for document.createElement('canvas')
+    const originalCreateElement = document.createElement;
+    document.createElement = function(tagName: string, options?: ElementCreationOptions): HTMLElement {
+      const el = originalCreateElement.call(document, tagName, options);
+      if (tagName && tagName.toLowerCase() === 'canvas') {
+        if (!el.getBoundingClientRect) {
+          el.getBoundingClientRect = function() {
+              return { width: (el as any).width || 0, height: (el as any).height || 0, top: 0, left: 0, right: (el as any).width || 0, bottom: (el as any).height || 0, x: 0, y: 0, toJSON: () => this };
+          };
+        }
+      }
+      return el;
+    } as any;
+  }
+} catch (e) {
+  console.warn("Failed to apply Canvas getBoundingClientRect polyfills:", e);
+}
+
 // Unregister service worker to prevent corrupt caching / blank page issues
 unregisterServiceWorker();
 

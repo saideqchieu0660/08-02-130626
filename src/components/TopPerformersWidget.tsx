@@ -1,8 +1,10 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Crown, Flame, ChevronUp, ChevronDown, Sparkles, Trophy, Award, Shield } from "lucide-react";
+import { Crown, Flame, ChevronUp, ChevronDown, Sparkles, Trophy, Award, Shield, BrainCircuit } from "lucide-react";
 import { cn } from "../lib/utils";
 import { User } from "../lib/store";
+import { getLevelInfo, getCustomTitleBadgeClass } from "../utils/xp";
+import { UserRoleBadge } from "./UserRoleBadge";
 
 interface TopPerformersWidgetProps {
   users: User[];
@@ -96,13 +98,20 @@ const LeaderboardRow = React.memo<LeaderboardRowProps>(({ user, index, currentUs
             )}
           </div>
 
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+            <span className="text-[10px] font-mono font-bold bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-1.5 py-0.5 rounded border border-stone-300 dark:border-stone-700">
+              Lv.{user.level || getLevelInfo(user.points || 0).currentLevel}
+            </span>
+            <span className={cn("text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded border", getCustomTitleBadgeClass(user.title, getLevelInfo(user.points || 0).badgeColors))}>
+              {user.title || getLevelInfo(user.points || 0).title}
+            </span>
+            <UserRoleBadge role={user.role} isSchoolLover={user.isSchoolLover} isPro={user.isPro} />
             {user.streak && (
-              <div className="flex items-center gap-0.5 text-[10px] font-bold text-orange-500 bg-orange-500/10 px-1.5 py-0.5 rounded-full border border-orange-500/10 whitespace-nowrap">
-                <Flame className="w-3 h-3" /> {user.streak}
+              <div className="flex items-center gap-0.5 text-[9px] font-bold text-orange-500 bg-orange-500/10 px-1 py-0.5 rounded-full border border-orange-500/10 whitespace-nowrap">
+                <Flame className="w-2.5 h-2.5" /> {user.streak}
               </div>
             )}
-            <span className={cn("text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 border", tier.color)}>
+            <span className={cn("text-[9px] hidden sm:flex font-bold px-1.5 py-0.5 rounded items-center gap-1 border", tier.color)}>
               {tier.icon} <span>{tier.name}</span>
             </span>
           </div>

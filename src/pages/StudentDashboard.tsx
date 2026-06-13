@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { store, Deck, saveLocalUserDecks } from "../lib/store";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { Plus, X, Play, TrendingUp, Users, Target, BookOpen, BrainCircuit, Activity, Flame, ArrowLeft, CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Sparkles, Maximize2, Minimize2, Bell, BellOff, BellRing, Settings, AlertTriangle, Trash2, Snowflake, Volume2, VolumeX, Clock, Network, Award, Bot, User, Crown, ChevronUp, ChevronDown, Minus, Shield, RefreshCw, Heart, LogOut, Bug, Type, Library, Camera, Edit3, HelpCircle, ShoppingBag } from "lucide-react";
+import { Plus, X, Play, TrendingUp, Users, Target, BookOpen, BrainCircuit, Activity, Flame, ArrowLeft, CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Sparkles, Maximize2, Minimize2, Bell, BellOff, BellRing, Settings, AlertTriangle, Trash2, Snowflake, Volume2, VolumeX, Clock, Network, Award, Bot, User, Crown, ChevronUp, ChevronDown, Minus, Shield, RefreshCw, Heart, LogOut, Bug, Type, Library, Camera, Edit3, HelpCircle, ShoppingBag, Lock } from "lucide-react";
 import { MarcusAureliusIcon } from "../components/MarcusAureliusIcon";
 import { cn } from "../lib/utils";
 import { safeRequest } from "../utils/apiClient";
@@ -34,7 +34,8 @@ import { DeckList } from "../components/DeckList";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 import { ExportStudyReport } from "../components/ExportStudyReport";
 import { useAICooldown, triggerAICooldown } from "../lib/cooldown";
-import { getLevelInfo } from "../utils/xp";
+import { getLevelInfo, getCustomTitleTextClass, getCustomTitleBadgeClass, ALL_TITLES, getUnlockedTitles } from "../utils/xp";
+import { toast } from "sonner";
 import { getEnvDiagnostics } from "../utils/envDiagnostics";
 
 export function parseRobustJsonArray(rawText: string): any[] {
@@ -106,28 +107,8 @@ const QuizCooldownTimer = ({ user }: any) => {
   return <span>Cooldown: {cooldownRemaining}s</span>;
 };
 
-const UserRoleBadge = React.memo(({ role, isSchoolLover, isPro }: { role: string; isSchoolLover?: boolean; isPro?: boolean }) => {
-  if (role === "Admin" || role === "admin" || role === "teacher") {
-    return (
-      <span className="text-xs font-bold px-3 py-1 rounded-full bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 flex items-center gap-1.5 shadow-sm">
-        <Shield className="w-3.5 h-3.5 text-rose-500" /> Admin
-      </span>
-    );
-  }
-  if (isSchoolLover && isPro) {
-    return (
-      <span className="text-xs font-bold px-3 py-1 rounded-full bg-pink-500/10 dark:bg-pink-500/20 text-pink-600 dark:text-pink-400 border border-pink-500/30 flex items-center gap-1.5 shadow-sm">
-        <Heart className="w-3.5 h-3.5 text-pink-500 fill-pink-500 animate-pulse" /> Em yêu trường em [VIP]
-      </span>
-    );
-  }
-  return (
-    <span className="text-xs font-bold px-3 py-1 rounded-full bg-stone-100 dark:bg-zinc-900 text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-zinc-800 flex items-center gap-1.5">
-      <Activity className="w-3.5 h-3.5" /> Học viên
-    </span>
-  );
-});
-UserRoleBadge.displayName = "UserRoleBadge";
+import { UserRoleBadge } from "../components/UserRoleBadge";
+import { FramerFireworks } from "../components/FramerFireworks";
 
 import { useSound } from "../hooks/useSound";
 import { TopPerformersWidget, getTier } from "../components/TopPerformersWidget";
@@ -207,6 +188,7 @@ export default function StudentDashboard() {
   const { click, success, error } = useSound();
   const user = store.getCurrentUser();
   const prevLevelRef = useRef<number | null>(null);
+  const [showFramerFireworks, setShowFramerFireworks] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -214,8 +196,15 @@ export default function StudentDashboard() {
       const currentLevel = user.level || xpInfo.currentLevel;
       
       if (prevLevelRef.current !== null && currentLevel > prevLevelRef.current) {
-         triggerCelebration();
-         // Could also show a toast or custom modal, but triggerCelebration already provides a nice effect.
+         setShowFramerFireworks(true);
+         toast.success(`🎉 Lệnh cấp ấn chí tôn! Thăng cấp ${currentLevel}!`, {
+           description: "Mày vừa mở khóa ranh giới mới. Quá đẳng cấp! Hãy xem xét đổi danh hiệu mới trong hồ sơ."
+         });
+         import("../lib/celebration").then(({ triggerCelebration }) => {
+           triggerCelebration();
+           setTimeout(triggerCelebration, 800);
+           setTimeout(() => triggerCelebration(true), 2000);
+         });
       }
       prevLevelRef.current = currentLevel;
     }
@@ -1502,6 +1491,7 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-8 animate-in fade-in pb-12 relative w-full max-w-full overflow-x-hidden">
+      <FramerFireworks active={showFramerFireworks} onComplete={() => setShowFramerFireworks(false)} />
       <OnboardingTour onComplete={() => {
         const hasRun = localStorage.getItem("hasRunTutorial");
         if (hasRun !== "true") {
@@ -2667,6 +2657,11 @@ export default function StudentDashboard() {
                           {tier.icon} {tier.name}
                         </div>
                         
+                        <div className={cn("text-xs font-bold leading-tight px-3 py-1 mt-1 mb-2 rounded-full", getCustomTitleBadgeClass(u.title, getLevelInfo(u.points || 0).badgeColors))}>{u.title || getLevelInfo(u.points || 0).title}</div>
+                        <div className="mb-2">
+                           <UserRoleBadge role={u.role} isSchoolLover={u.isSchoolLover} isPro={u.isPro} />
+                        </div>
+                        
                         <div className="font-mono text-2xl sm:text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-stone-700 to-black dark:from-stone-300 dark:to-white drop-shadow-sm">
                           {u.points || 0} <span className="text-sm opacity-50 font-sans">pts</span>
                         </div>
@@ -2717,6 +2712,10 @@ export default function StudentDashboard() {
                                 <span className="text-[10px] font-mono font-bold bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-1.5 py-0.5 rounded border border-stone-300 dark:border-stone-700">
                                   Lv.{u.level || getLevelInfo(u.points || 0).currentLevel}
                                 </span>
+                                <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded border", getCustomTitleBadgeClass(u.title, getLevelInfo(u.points || 0).badgeColors))}>
+                                  {u.title || getLevelInfo(u.points || 0).title}
+                                </span>
+                                <UserRoleBadge role={u.role} isSchoolLover={u.isSchoolLover} isPro={u.isPro} />
                                 {u.streak && (
                                   <span className="flex items-center gap-0.5 text-[10px] font-bold text-orange-500 bg-orange-500/10 px-1.5 py-0.5 rounded border border-orange-500/20">
                                     <Flame className="w-3 h-3" /> {u.streak}
@@ -3230,10 +3229,9 @@ export default function StudentDashboard() {
                 { id: "diamond", label: "Huy hiệu Kim Cương", color: "ring-4 ring-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.6)] animate-pulse" }
               ];
               
-              const TITLES = [
-                "Tân binh", "Chăm chỉ", "Học giả", "Kẻ Hủy Diệt", "Bậc Thầy", "Huyền Thoại Trí Tuệ",
-                xpInfo.title
-              ].filter((v, i, a) => a.indexOf(v) === i);
+              const AVAILABLE_BORDERS = BORDERS.filter(b => b.id === "none" || b.id === equippedBorder);
+              
+              const unlockedTitles = getUnlockedTitles(xpInfo.currentLevel, user.title);
 
               const updateProfileField = async (field: "title" | "avatarBorder", value: string) => {
                 try {
@@ -3359,7 +3357,7 @@ export default function StudentDashboard() {
                             </div>
                           )}
                           <div className="flex flex-wrap items-center gap-3 justify-center md:justify-start mt-1">
-                            <p className={cn("font-bold tracking-wide italic", user.title ? "text-amber-600 dark:text-amber-400" : xpInfo.titleColor)}>"{equippedTitle}"</p>
+                            <p className={cn("font-bold tracking-wide italic mt-1", getCustomTitleTextClass(equippedTitle, xpInfo.titleColor))}>"{equippedTitle}"</p>
                             <UserRoleBadge role={user.role} isSchoolLover={user.isSchoolLover} isPro={user.isPro} />
                           </div>
                        </div>
@@ -3400,7 +3398,7 @@ export default function StudentDashboard() {
                     <div className="space-y-4">
                       <h4 className="font-bold text-xl border-b border-black/10 dark:border-white/10 pb-2">Đeo Khung Avatar</h4>
                       <div className="grid grid-cols-1 gap-3">
-                        {BORDERS.map(border => (
+                        {AVAILABLE_BORDERS.map(border => (
                           <button
                             key={border.id}
                             onClick={() => updateProfileField("avatarBorder", border.id)}
@@ -3422,24 +3420,49 @@ export default function StudentDashboard() {
                     </div>
 
                     <div className="space-y-4">
-                      <h4 className="font-bold text-xl border-b border-black/10 dark:border-white/10 pb-2">Danh Hiệu Hiển Thị</h4>
-                      <div className="flex flex-wrap gap-3">
-                        {TITLES.map(title => (
-                          <button
-                            key={title}
-                            onClick={() => updateProfileField("title", title)}
-                            className={cn(
-                              "px-5 py-3 rounded-xl border font-bold transition-all duration-300",
-                              equippedTitle === title
-                                ? "bg-amber-500 text-white border-amber-600 shadow-md transform scale-105" 
-                                : "bg-white/50 border-stone-200 text-stone-600 dark:bg-zinc-800/50 dark:border-zinc-700 dark:text-stone-300 hover:border-amber-500/50"
-                            )}
-                          >
-                            {title}
-                          </button>
-                        ))}
+                      <h4 className="font-bold text-xl border-b border-black/10 dark:border-white/10 pb-2">Danh sách Danh Hiệu Sở Hữu</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                        {ALL_TITLES.map(titleObj => {
+                          const isUnlocked = unlockedTitles.includes(titleObj.id);
+                          const isEquipped = equippedTitle === titleObj.id;
+
+                          return (
+                            <button
+                              key={titleObj.id}
+                              onClick={() => {
+                                if (isUnlocked) {
+                                  updateProfileField("title", titleObj.id);
+                                  toast.success(`Đã trang bị danh hiệu: ${titleObj.id}`);
+                                } else {
+                                  toast.error(`Danh hiệu khóa: ${titleObj.id}`, { description: titleObj.desc });
+                                }
+                              }}
+                              className={cn(
+                                "p-4 rounded-xl border flex flex-col items-center justify-center transition-all duration-300 text-center gap-2",
+                                isEquipped
+                                  ? "bg-amber-500/10 border-amber-500 shadow-md ring-1 ring-amber-500" 
+                                  : isUnlocked
+                                    ? "bg-white/50 border-stone-200 hover:border-amber-500/50 dark:bg-zinc-800/50 dark:border-zinc-700" 
+                                    : "bg-stone-100/50 border-transparent opacity-60 backdrop-grayscale dark:bg-black/20"
+                              )}
+                            >
+                              <span className={cn(
+                                "text-center transition-all", 
+                                isUnlocked 
+                                  ? getCustomTitleTextClass(titleObj.id, isEquipped ? "font-black" : "font-semibold")
+                                  : "text-stone-400 font-medium line-through"
+                              )}>
+                                {titleObj.id}
+                              </span>
+                              {!isUnlocked && <Lock className="w-4 h-4 text-stone-400 opacity-50" />}
+                              {isEquipped && <CheckCircle2 className="w-4 h-4 text-amber-500 mt-1" />}
+                            </button>
+                          );
+                        })}
                       </div>
-                      <h4 className="font-bold text-xl border-b border-black/10 dark:border-white/10 pb-2 mt-6">Tag Thành Viên Hồ Sơ</h4>
+                    </div>
+                    
+                    <div className="space-y-4">
                       <div className="flex flex-wrap gap-3 mt-2">
                         <button
                           key="default-tag"
@@ -4612,7 +4635,7 @@ export default function StudentDashboard() {
                   {selectedUserProfile.name}
                 </h3>
                 
-                <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+                <div className="flex flex-wrap items-center justify-center gap-2 mb-2 mt-4">
                   {(() => {
                     const tier = getTier(selectedUserProfile.points || 0);
                     return (
@@ -4623,22 +4646,26 @@ export default function StudentDashboard() {
                   })()}
                   <UserRoleBadge role={selectedUserProfile.role} isSchoolLover={selectedUserProfile.isSchoolLover} isPro={selectedUserProfile.isPro} />
                 </div>
+                
+                <div className="flex justify-center mb-6">
+                   <div className={cn("text-sm font-bold leading-tight px-4 py-1.5 rounded-full shadow-sm", getCustomTitleBadgeClass(selectedUserProfile.title, getLevelInfo(selectedUserProfile.points || 0).badgeColors))}>{selectedUserProfile.title || getLevelInfo(selectedUserProfile.points || 0).title}</div>
+                </div>
 
                 <div className="w-full grid grid-cols-2 gap-4">
+                  <div className="bg-stone-50 dark:bg-zinc-900/50 p-4 rounded-2xl border border-stone-100 dark:border-zinc-800 flex flex-col items-center justify-center text-center">
+                     <BrainCircuit className="w-6 h-6 text-blue-500 mb-2" />
+                     <span className="text-3xl font-black font-mono text-stone-900 dark:text-white">
+                       {selectedUserProfile.level || getLevelInfo(selectedUserProfile.points || 0).currentLevel}
+                     </span>
+                     <span className="text-[10px] font-bold uppercase tracking-widest opacity-50 mt-1">Level</span>
+                  </div>
+                  
                   <div className="bg-stone-50 dark:bg-zinc-900/50 p-4 rounded-2xl border border-stone-100 dark:border-zinc-800 flex flex-col items-center justify-center text-center">
                      <Target className="w-6 h-6 text-yellow-500 mb-2" />
                      <span className="text-3xl font-black font-mono text-stone-900 dark:text-white">
                        {selectedUserProfile.points || 0}
                      </span>
-                     <span className="text-[10px] font-bold uppercase tracking-widest opacity-50 mt-1">Total Points</span>
-                  </div>
-                  
-                  <div className="bg-stone-50 dark:bg-zinc-900/50 p-4 rounded-2xl border border-stone-100 dark:border-zinc-800 flex flex-col items-center justify-center text-center">
-                     <BrainCircuit className="w-6 h-6 text-blue-500 mb-2" />
-                     <span className="text-3xl font-black font-mono text-stone-900 dark:text-white">
-                       {rankTrends[selectedUserProfile.id] === 'up' ? '+' : ''}{selectedUserProfile.points || 0}
-                     </span>
-                     <span className="text-[10px] font-bold uppercase tracking-widest opacity-50 mt-1">Weekly Focus</span>
+                     <span className="text-[10px] font-bold uppercase tracking-widest opacity-50 mt-1">Weekly Points</span>
                   </div>
                 </div>
               </div>

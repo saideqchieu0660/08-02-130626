@@ -30,6 +30,7 @@ import { auth, FirebaseListenerManager } from "./lib/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { store } from "./lib/store";
 
+import { Toaster } from "sonner";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { DashboardSkeleton } from "./components/DashboardSkeleton";
 import { AppUpdateNotification } from "./components/AppUpdateNotification";
@@ -1366,6 +1367,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
+      <Toaster position="bottom-right" richColors />
       <GlobalErrorReporter />
       <Layout>
         <AnimatePresence mode="wait">

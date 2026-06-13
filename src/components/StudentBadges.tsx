@@ -22,6 +22,20 @@ const BADGES = [
     reward: '✨ Nhận +50 Linh Thạch tích lũy'
   },
   {
+    id: 'streak_5',
+    name: 'Ngưng Khí Đan Điền',
+    desc: 'Bền vững tinh thần chuỗi 5 ngày đột phá',
+    req: 5,
+    icon: Flame,
+    color: 'text-amber-500',
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/30',
+    gradient: 'from-amber-500/20 to-yellow-500/5',
+    type: 'streak' as const,
+    span: 'col-span-1 min-h-[12.5rem]',
+    reward: '✨ Hồi 20% Thể Lực Hàng Ngày'
+  },
+  {
     id: 'week_warrior',
     name: 'Chiến Binh Trúc Cơ',
     desc: 'Chuỗi 7 ngày thiền định không đứt',
@@ -34,6 +48,20 @@ const BADGES = [
     type: 'streak' as const,
     span: 'col-span-1 min-h-[12.5rem]',
     reward: '✨ Tặng 100 Điểm Tu Vi & Tiên Ấn'
+  },
+  {
+    id: 'streak_10',
+    name: 'Ý Chí Bàn Thạch',
+    desc: 'Kỷ luật bẻ gãy lười biếng chuỗi 10 ngày',
+    req: 10,
+    icon: Shield,
+    color: 'text-yellow-500',
+    bg: 'bg-yellow-500/10',
+    border: 'border-yellow-500/30',
+    gradient: 'from-yellow-500/20 to-amber-500/5',
+    type: 'streak' as const,
+    span: 'col-span-1 min-h-[12.5rem]',
+    reward: '✨ Thưởng Thêm Dan Dược Động Lực'
   },
   {
     id: 'streak_15',
@@ -64,6 +92,36 @@ const BADGES = [
     isVip: true,
     reward: '🔥 Danh xưng Sư Tổ, x1.5 Đan Dược Thưởng'
   },
+  {
+    id: 'streak_50',
+    name: 'Hóa Thần Supreme',
+    desc: 'Chuỗi 50 ngày kiên trì rúng động tiên tông',
+    req: 50,
+    icon: Award,
+    color: 'text-purple-400',
+    bg: 'bg-purple-500/15',
+    border: 'border-purple-500/50',
+    gradient: 'from-purple-500/30 through-indigo-500/20 to-transparent',
+    type: 'streak' as const,
+    span: 'col-span-2 min-h-[12.5rem]',
+    isVip: true,
+    reward: '🔥 Vương Quy Khung Động Càn Khôn'
+  },
+  {
+    id: 'streak_100',
+    name: 'Đại Phá Hư Không',
+    desc: 'Chuỗi 100 ngày khổ luyện đạt quả vị thần tiên',
+    req: 100,
+    icon: Crown,
+    color: 'text-pink-500',
+    bg: 'bg-pink-500/15',
+    border: 'border-pink-500/50',
+    gradient: 'from-pink-500/30 to-fuchsia-500/10',
+    type: 'streak' as const,
+    span: 'col-span-2 sm:col-span-2 md:col-span-4 min-h-[12.5rem]',
+    isVip: true,
+    reward: '🔥 Nhất Đại Tông Sư Vô Song Điện'
+  },
 
   // 2. LINH THẠCH TÍCH LŨY (XP / Points)
   {
@@ -79,6 +137,20 @@ const BADGES = [
     type: 'points' as const,
     span: 'col-span-1 min-h-[12.5rem]',
     reward: '✨ Thưởng 50 Điểm Tích Lũy Thêm'
+  },
+  {
+    id: 'points_300',
+    name: 'Linh Thừa Đủ Đầy',
+    desc: 'Gom góp tích lũy 300 Linh Thạch tinh khiết',
+    req: 300,
+    icon: Star,
+    color: 'text-cyan-400',
+    bg: 'bg-cyan-500/10',
+    border: 'border-cyan-500/30',
+    gradient: 'from-cyan-400/20 to-blue-500/5',
+    type: 'points' as const,
+    span: 'col-span-1 min-h-[12.5rem]',
+    reward: '✨ Thưởng x1.1 Linh Thạch hồi đoái'
   },
   {
     id: 'knowledge_seeker',
@@ -110,6 +182,20 @@ const BADGES = [
     reward: '🔥 Khung viền Kim Long & Sắc sắc Tiên Đồng'
   },
   {
+    id: 'points_2000',
+    name: 'Huyền Thông Đạo Nhân',
+    desc: 'Tu vi đạt tới 2,000 Linh Thạch thăng cấp vinh dự',
+    req: 2000,
+    icon: Medal,
+    color: 'text-rose-450',
+    bg: 'bg-rose-500/10',
+    border: 'border-rose-500/35',
+    gradient: 'from-rose-500/20 to-pink-500/10',
+    type: 'points' as const,
+    span: 'col-span-1 min-h-[12.5rem]',
+    reward: '✨ Sát hào văn ngọc bích quanh thần'
+  },
+  {
     id: 'ai_master',
     name: 'Bậc Thầy Huyền Cơ',
     desc: 'Hiển danh sở hữu 2,500 Linh Thạch',
@@ -135,9 +221,24 @@ const BADGES = [
     border: 'border-purple-500/50',
     gradient: 'from-purple-400/30 via-fuchsia-500/20 to-pink-600/10',
     type: 'points' as const,
-    span: 'col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-2 min-h-[12.5rem]',
+    span: 'col-span-2 sm:col-span-3 md:col-span-2 min-h-[12.5rem]',
     isVip: true,
     reward: '🔥 Khung Chí Tôn Vô Cực lấp lánh'
+  },
+  {
+    id: 'points_10000',
+    name: 'Chí Tôn Vô Biên',
+    desc: 'Kim quang vạn trượng gom hơn 10k Linh Thạch đại diện',
+    req: 10000,
+    icon: Trophy,
+    color: 'text-amber-400',
+    bg: 'bg-amber-500/20',
+    border: 'border-amber-500/60',
+    gradient: 'from-amber-400/30 via-yellow-500/20 to-orange-550/10',
+    type: 'points' as const,
+    span: 'col-span-2 sm:col-span-4 min-h-[12.5rem]',
+    isVip: true,
+    reward: '🔥 Tượng Vàng Thần Tiên Tông tạc Thần Tháp'
   },
 
   // 3. THỜI GIAN KHỔ LUYỆN TRONG TUẦN (TIME - Số phút học tập trong tuần)
@@ -156,6 +257,20 @@ const BADGES = [
     reward: '✨ Tặng 30 Thạch Động Viên'
   },
   {
+    id: 'time_30',
+    name: 'Hành Giả Khởi Hành',
+    desc: 'Tích lũy 30 phút luyện thiền trí tuệ',
+    req: 30,
+    icon: Hourglass,
+    color: 'text-sky-400',
+    bg: 'bg-sky-500/10',
+    border: 'border-sky-500/30',
+    gradient: 'from-sky-400/20 to-cyan-500/5',
+    type: 'time' as const,
+    span: 'col-span-1 min-h-[12.5rem]',
+    reward: '✨ Thưởng +20 Tu Vi Chân Nguyên'
+  },
+  {
     id: 'time_60',
     name: 'Nhất Tâm Trực Chỉ',
     desc: 'Tích lũy 60 phút tu hành bứt phá',
@@ -168,6 +283,20 @@ const BADGES = [
     type: 'time' as const,
     span: 'col-span-1 min-h-[12.5rem]',
     reward: '✨ Trận pháp rèn luyện tập trung +20%'
+  },
+  {
+    id: 'time_120',
+    name: 'Hóa Cảnh Huyền Đồng',
+    desc: 'Bền bỉ tu văn 120 phút (2 tiếng) không ngừng nghỉ',
+    req: 120,
+    icon: Activity,
+    color: 'text-emerald-450',
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/30',
+    gradient: 'from-emerald-450/20 to-green-500/5',
+    type: 'time' as const,
+    span: 'col-span-1 min-h-[12.5rem]',
+    reward: '✨ Pháp bảo Định Tâm hỗ trợ tịnh tâm'
   },
   {
     id: 'time_180',
@@ -198,6 +327,21 @@ const BADGES = [
     isVip: true,
     reward: '🔥 Vinh danh Tiên Sách Đệ Nhất Khổ Tu'
   },
+  {
+    id: 'time_600',
+    name: 'Hữu Đạo Chân Nhân',
+    desc: 'Kỷ lục 10 tiếng (600 phút) đại bão học tập tột bực',
+    req: 600,
+    icon: Cpu,
+    color: 'text-fuchsia-400',
+    bg: 'bg-fuchsia-500/15',
+    border: 'border-fuchsia-100/30',
+    gradient: 'from-fuchsia-500/30 via-purple-500/10 to-transparent',
+    type: 'time' as const,
+    span: 'col-span-2 min-h-[12.5rem]',
+    isVip: true,
+    reward: '🔥 Bảo khí Tái Tạo Ngộ Tính Chân Truyền x2'
+  },
 
   // 4. NGỰ TRỊ NGÔI VƯƠNG (TOP 1 BXH TUẦN)
   {
@@ -215,6 +359,20 @@ const BADGES = [
     reward: '✨ Sắc sắc tôn vinh Hào Quang Độc Bộ'
   },
   {
+    id: 'top1_2',
+    name: 'Song Phụng Quy Sào',
+    desc: 'Tiếp tục rực cháy ngự trị vị trí Top 1 đỉnh cao 2 tuần',
+    req: 2,
+    icon: Medal,
+    color: 'text-pink-400',
+    bg: 'bg-pink-500/10',
+    border: 'border-pink-500/30',
+    gradient: 'from-pink-400/20 to-orange-400/5',
+    type: 'top1' as const,
+    span: 'col-span-1 min-h-[12.5rem]',
+    reward: '✨ Sát chiêu tiên quang tỏa hào phong quang'
+  },
+  {
     id: 'top1_3',
     name: 'Tam Thiên Vương Giả',
     desc: 'Sừng sững 3 tuần bế quan ngôi hoàng kim Top 1',
@@ -226,7 +384,37 @@ const BADGES = [
     gradient: 'from-yellow-400/20 to-orange-600/10',
     type: 'top1' as const,
     span: 'col-span-1 min-h-[12.5rem]',
-    reward: '🔥 Đội mũ Vương Giả lấp quang vạn thế'
+    reward: '🔥 Đội vương miện hoàng tộc vĩnh bảo'
+  },
+  {
+    id: 'top1_5',
+    name: 'Ngũ Hành Thần Thống',
+    desc: 'Bất biến 5 tuần liên tục thống soái đỉnh vô thượng Top 1',
+    req: 5,
+    icon: Trophy,
+    color: 'text-orange-400',
+    bg: 'bg-orange-500/15',
+    border: 'border-orange-500/40',
+    gradient: 'from-orange-400/35 to-rose-600/10',
+    type: 'top1' as const,
+    span: 'col-span-1 min-h-[12.5rem]',
+    isVip: true,
+    reward: '🔥 Huy hiệu Thất Đại Thần Thông tiên thánh'
+  },
+  {
+    id: 'top1_10',
+    name: 'Vạn Cổ Đệ Nhất Đế',
+    desc: 'Khắc cốt vương đại thống lĩnh BXH Top 1 rực rỡ suốt 10 tuần',
+    req: 10,
+    icon: Crown,
+    color: 'text-yellow-400',
+    bg: 'bg-yellow-500/20',
+    border: 'border-yellow-500/60',
+    gradient: 'from-yellow-400/35 to-amber-700/20',
+    type: 'top1' as const,
+    span: 'col-span-2 sm:col-span-2 md:col-span-4 min-h-[12.5rem]',
+    isVip: true,
+    reward: '🔥 Sắc Miện Thống Trị Tiên Cảnh Vô Biên Vĩnh Dạ'
   },
 
   // 5. NGỘ TÍNH BÌNH QUÂN (AVERAGE MASTERY - Mức độ thông thạo trung bình)
