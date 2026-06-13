@@ -60,6 +60,65 @@ export default function TeacherDashboard() {
   const [isAiSystemBusy, setIsAiSystemBusy] = useState(false);
   const [aiBusyType, setAiBusyType] = useState<string | null>(null);
 
+  // States ban phát nội công (XP & PT Points/Level)
+  const [rewardTargetId, setRewardTargetId] = useState("");
+  const [rewardPoints, setRewardPoints] = useState("");
+  const [rewardLevels, setRewardLevels] = useState("");
+  const [isDispatchingReward, setIsDispatchingReward] = useState(false);
+  const [rewardMessage, setRewardMessage] = useState("");
+
+  const handleDispatchReward = async () => {
+    if (!rewardTargetId) return;
+    setIsDispatchingReward(true);
+    setRewardMessage("");
+    try {
+      const { dbService } = await import("../lib/firebase");
+      
+      const chosenUser = dbUsers.find(u => u.id === rewardTargetId) || (user && rewardTargetId === user.id ? user : null);
+      if (!chosenUser) {
+        throw new Error("Không tìm thấy tu sĩ này trên giang hồ!");
+      }
+      
+      const addPoints = parseInt(rewardPoints, 10) || 0;
+      const addLevel = parseInt(rewardLevels, 10) || 0;
+      
+      const currentPoints = chosenUser.points || 0;
+      const currentLevel = chosenUser.level || 1;
+      
+      const updatedPoints = Math.max(0, currentPoints + addPoints);
+      const updatedLevel = Math.max(1, currentLevel + addLevel);
+      
+      await dbService.updateUserProfile(rewardTargetId, {
+        points: updatedPoints,
+        level: updatedLevel
+      });
+      
+      // Update local state list
+      setDbUsers(prev => prev.map(u => u.id === rewardTargetId ? { ...u, points: updatedPoints, level: updatedLevel } : u));
+      
+      // If of current Admin
+      if (user && rewardTargetId === user.id) {
+        store.updateCurrentUser({
+          points: updatedPoints,
+          level: updatedLevel
+        });
+        
+        window.dispatchEvent(new CustomEvent("henosis-data-synced"));
+      }
+      
+      setRewardMessage(`Đã thi triển đại pháp thành công! Ban phát thành công ${addPoints >= 0 ? '+' : ''}${addPoints} Linh Thạch (PT) và ${addLevel >= 0 ? '+' : ''}${addLevel} cấp tu vi (Level) cho ${chosenUser.name}!`);
+      
+      // Clean up inputs
+      setRewardPoints("");
+      setRewardLevels("");
+    } catch (err: any) {
+      console.error(err);
+      setRewardMessage(`Gặp lỗi khi thi triển truyền công: ${err.message}`);
+    } finally {
+      setIsDispatchingReward(false);
+    }
+  };
+
   useEffect(() => {
     const checkBusy = () => {
       if ((window as any).AI_BUSY) {
@@ -813,6 +872,84 @@ export default function TeacherDashboard() {
                     ) : "Lưu toàn bộ thành Bộ thẻ (Deck)"}
                   </button>
                 </div>
+              </div>
+            )}
+          </section>
+
+          {/* BAN PHÁT NỘI CÔNG (XP & PT) CENTER */}
+          <section className="glass p-6 rounded-2xl relative overflow-hidden border border-amber-500/20 mb-6">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+            <h3 className="text-xl font-cyber font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-amber-500 to-yellow-600 dark:from-amber-200 dark:via-yellow-400 dark:to-amber-500 flex items-center gap-2 mb-2">
+              <Sparkles className="w-5 h-5 text-amber-500 animate-pulse animate-spin-slow" />
+              Thiền Viện Ban Phát Tu Vi & Linh Thạch (XP & PT)
+            </h3>
+            <p className="text-xs opacity-75 mb-4 max-w-3xl leading-relaxed">
+              Thượng nhân Admin ơi! Tại đây mày có thể trực tiếp truyền thụ thần thông: tăng giảm <strong>Tu Vi (Level/Cảnh Giới)</strong> và <strong>Linh Thạch (PT/Points)</strong> cho chính mày hoặc tùy chọn bất cứ thành viên nào trong danh sách. Hệ thống sẽ tự động cập nhật đồng bộ tức thời lên Tiên Giới (Firestore)!
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+              <div>
+                <label className="block text-xs font-bold mb-1 opacity-80">Chọn Tu Sĩ Thụ Linh</label>
+                <select
+                  value={rewardTargetId}
+                  onChange={(e) => setRewardTargetId(e.target.value)}
+                  className="w-full bg-stone-100 dark:bg-zinc-900 border border-stone-300 dark:border-zinc-800 rounded-xl p-2.5 text-xs font-bold"
+                >
+                  <option value="">-- Chọn tu sĩ từ giang hồ --</option>
+                  {user && (
+                    <option value={user.id} className="font-extrabold text-amber-600">
+                      Chính Mày (Admin - {user.name})
+                    </option>
+                  )}
+                  {dbUsers.map(u => {
+                    if (user && u.id === user.id) return null;
+                    return (
+                      <option key={u.id} value={u.id}>
+                        {u.name} ({u.role === "student" ? "Học sinh" : u.role || "student"} | ID: {u.id.substring(0, 6)} | {u.points || 0} PTS)
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold mb-1 opacity-80">Linh Thạch (PT / Points)</label>
+                <input
+                  type="text"
+                  placeholder="Ví dụ: +500 hoặc -100"
+                  value={rewardPoints}
+                  onChange={(e) => setRewardPoints(e.target.value)}
+                  className="w-full bg-stone-100 dark:bg-zinc-900 border border-stone-300 dark:border-zinc-800 rounded-xl p-2.5 text-xs text-center font-mono font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold mb-1 opacity-80">Tu Vi (Level Cảnh Giới)</label>
+                <input
+                  type="text"
+                  placeholder="Ví dụ: +1 hoặc -2"
+                  value={rewardLevels}
+                  onChange={(e) => setRewardLevels(e.target.value)}
+                  className="w-full bg-stone-100 dark:bg-zinc-900 border border-stone-300 dark:border-zinc-800 rounded-xl p-2.5 text-xs text-center font-mono font-bold"
+                />
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={handleDispatchReward}
+                  disabled={isDispatchingReward || !rewardTargetId}
+                  className="w-full bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-black font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 border-none cursor-pointer"
+                >
+                  {isDispatchingReward ? "Đang truyền công..." : "🔥 Ban Phát Sức Mạnh"}
+                </button>
+              </div>
+            </div>
+
+            {rewardMessage && (
+              <div className="mt-3 p-2.5 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-700 dark:text-amber-400 font-bold flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-amber-500 animate-spin-slow" />
+                <span>{rewardMessage}</span>
               </div>
             )}
           </section>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { store, Deck } from "../lib/store";
+import { store, Deck, saveLocalUserDecks } from "../lib/store";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Plus, X, Play, TrendingUp, Users, Target, BookOpen, BrainCircuit, Activity, Flame, ArrowLeft, CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Sparkles, Maximize2, Minimize2, Bell, BellOff, BellRing, Settings, AlertTriangle, Trash2, Snowflake, Volume2, VolumeX, Clock, Network, Award, Bot, User, Crown, ChevronUp, ChevronDown, Minus, Shield, RefreshCw, Heart, LogOut, Bug, Type, Library, Camera, Edit3, HelpCircle, ShoppingBag } from "lucide-react";
 import { MarcusAureliusIcon } from "../components/MarcusAureliusIcon";
@@ -2797,39 +2797,39 @@ export default function StudentDashboard() {
                     <Snowflake className="w-6 h-6 animate-spin-slow" />
                   </span>
                   <span className="px-3 py-1 bg-blue-500/20 text-blue-700 dark:text-blue-300 rounded-full text-xs font-bold">
-                    Duy Nhất
+                    Bảo Khí Duy Nhất
                   </span>
                 </div>
-                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Băng Hỏa Vệ (Streak Freeze)</h4>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Thiên Băng Thần Giáp (Streak Freeze)</h4>
                 <p className="text-xs opacity-70 mb-4 min-h-[40px]">
-                  Bảo vệ chuỗi học tập (Streak) của mày nếu lỡ quên không ôn tập thẻ trong 1 ngày. Cứu cánh đắc lực cho những ngày bận rộn!
+                  Bảo hộ chuỗi ngày tu luyện (Streak) của bản tôn khỏi bị đứt đoạn dẫu có lỡ quên mài dũa thẻ bài trong một ngày bận rộn dã ngoại!
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
-                <span className="font-extrabold text-base text-blue-600 dark:text-blue-400">400 pts</span>
+                <span className="font-extrabold text-base text-blue-600 dark:text-blue-400">400 Linh Thạch (pts)</span>
                 <button
                   onClick={() => {
                     if (user?.streakFreeze) {
-                      alert("Mày đã sở hữu Băng Hỏa Vệ rồi!");
+                      alert("Mày đã sở hữu Thiên Băng Thần Giáp hộ thể rồi!");
                       return;
                     }
                     if (user && user.points < 400) {
-                      alert("Không đủ điểm rồi mày ơi! Chăm chỉ ôn tập để kiếm thêm points nhé.");
+                      alert("Không đủ Linh Thạch rồi đạo hữu ơi! Hãy chăm chỉ ôn luyện thẻ bài học tập để tích lũy thêm.");
                       return;
                     }
                     if (store.buyStreakFreeze(400)) {
-                      alert("Kích hoạt Băng Hỏa Vệ thành công! Bạn được bảo vệ tối đa 1 ngày rảnh.");
+                      alert("Truyền công thành công! Thiên Băng Thần Giáp đã được pháp lực của mày kích hoạt bảo vệ 1 ngày!");
                       setForceRender(prev => prev + 1);
                     }
                   }}
                   disabled={user?.streakFreeze || (user ? user.points < 400 : true)}
                   className="px-4 py-2 bg-blue-500 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 hover:shadow-blue-500/40 active:scale-95 transition disabled:opacity-40 disabled:pointer-events-none"
                 >
-                  {user?.streakFreeze ? "Đã Sở Hữu" : "Mua Ngay"}
+                  {user?.streakFreeze ? "Đã Kích Hoạt" : "Kích Hoạt"}
                 </button>
               </div>
             </div>
-
+            
             {/* Item 2: XP Potion */}
             <div className="glass p-6 rounded-2xl border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
               <div className="absolute -top-12 -right-12 w-24 h-24 bg-purple-500/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
@@ -2839,31 +2839,31 @@ export default function StudentDashboard() {
                     <Sparkles className="w-6 h-6 animate-pulse" />
                   </span>
                   <span className="px-3 py-1 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-full text-xs font-bold">
-                    Tiêu Dùng
+                    Tiêu Dùng Đan
                   </span>
                 </div>
-                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Dịch Hồi Thiên (+50 XP)</h4>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Cửu Chuyển Hoàn Hồn Đan (+50 Tu Vi)</h4>
                 <p className="text-xs opacity-70 mb-4 min-h-[40px]">
-                  Tăng trực tiếp 50 điểm kinh nghiệm (XP) vào tài khoản của mày giúp tăng cấp nhanh hơn và xếp hạng tuần vượt trội!
+                  Gia tăng trực tiếp 50 điểm Tu Vi kinh nghiệm (XP) vào kim đan thần cốt, thúc đẩy đột phá bình cảnh thần tốc trên bảng vàng tuần!
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
-                <span className="font-extrabold text-base text-purple-600 dark:text-purple-400">150 pts</span>
+                <span className="font-extrabold text-base text-purple-600 dark:text-purple-400">150 Linh Thạch (pts)</span>
                 <button
                   onClick={() => {
                     if (user && user.points < 150) {
-                      alert("Không đủ điểm rồi mày ơi! Hãy học thêm các bộ thẻ để tích luỹ.");
+                      alert("Thiếu thốn tài nguyên rồi đạo hữu! Hãy chuyên tâm nạp thêm trí tuệ để gom nhặt Linh Thạch.");
                       return;
                     }
                     if (store.buyXPPotion(150, 50)) {
-                      alert("Nốc bình thuốc thành công! Nhận ngay +50 XP bổ trợ tinh thần.");
+                      alert("Tống đan dược thành công! Luồng chân khí ngập tràn, bản tôn nhận ngay +50 điểm Tu Vi.");
                       setForceRender(prev => prev + 1);
                     }
                   }}
                   disabled={user ? user.points < 150 : true}
                   className="px-4 py-2 bg-purple-500 text-white rounded-xl text-xs font-bold shadow-md shadow-purple-500/20 hover:shadow-purple-500/40 active:scale-95 transition"
                 >
-                  Mua Ngay
+                  Nuốt Đan
                 </button>
               </div>
             </div>
@@ -2877,31 +2877,31 @@ export default function StudentDashboard() {
                     <Trophy className="w-6 h-6 animate-pulse" />
                   </span>
                   <span className="px-3 py-1 bg-amber-500/20 text-amber-700 dark:text-amber-300 rounded-full text-xs font-bold">
-                    Cao Cấp
+                    Tiên Ấn Tối Cao
                   </span>
                 </div>
-                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Bạch Kim Thăng Cấp (+1 Cấp)</h4>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Hỗn Nguyên Đột Phá Đan (Cảnh Giới +1)</h4>
                 <p className="text-xs opacity-70 mb-4 min-h-[40px]">
-                  Nâng thẳng 1 cấp độ tức thì! Mở khóa ngay các đặc quyền danh hiệu cấp cao mà không cần tích luỹ từng bậc.
+                  Oanh kích thẳng 1 tầng cảnh giới (Level) tức thì! Nhận ngay các uy phong danh hiệu cao quý mà không cần khổ tu qua từng ngưỡng.
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
-                <span className="font-extrabold text-base text-amber-600 dark:text-amber-400">600 pts</span>
+                <span className="font-extrabold text-base text-amber-600 dark:text-amber-400">600 Linh Thạch (pts)</span>
                 <button
                   onClick={() => {
                     if (user && user.points < 600) {
-                      alert("Không đủ điểm rồi mày ơi! Cố gắng luyện tập Stoic thêm nhé.");
+                      alert("Tiên cơ chưa đủ! Con đường tu hành gian nan, hãy ôn luyện bồi đắp thêm Linh Thạch dồi dào.");
                       return;
                     }
                     if (store.buyLevelUp(600)) {
-                      alert("Bạn đã đột phá thăng cấp thành công! Level+1.");
+                      alert("Oành! Tiếng sét vang rền trời đất, bản tôn đột phá phong thần thăng cảnh giới thành công! (Level +1)");
                       setForceRender(prev => prev + 1);
                     }
                   }}
                   disabled={user ? user.points < 600 : true}
                   className="px-4 py-2 bg-amber-500 text-white rounded-xl text-xs font-bold shadow-md shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-95 transition"
                 >
-                  Mua Ngay
+                  Hóa Thần
                 </button>
               </div>
             </div>
@@ -2915,51 +2915,49 @@ export default function StudentDashboard() {
                     <Shield className="w-6 h-6" />
                   </span>
                   <span className="px-3 py-1 bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 rounded-full text-xs font-bold">
-                    Trang Trí
+                    Không Gian Trang Trí
                   </span>
                 </div>
-                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Viền Avatar Kim Cương</h4>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Huyền Linh Lôi Vân Ấn (Khung Avatar)</h4>
                 <p className="text-xs opacity-70 mb-4 min-h-[40px]">
-                  Trang bị ngay khung viền hào quang phát sáng lấp lánh màu neon xung quanh ảnh đại diện của mày ở mọi bảng xếp hạng!
+                  Khắc sâu cổ xưa pháp ấn hào quang sấm sét neon phát sáng xanh biếc lấp lánh bao bọc ảnh đại diện trên mọi tiên bảng!
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
-                <span className="font-extrabold text-base text-cyan-600 dark:text-cyan-400">500 pts</span>
+                <span className="font-extrabold text-base text-cyan-600 dark:text-cyan-400">500 Linh Thạch (pts)</span>
                 <button
                   onClick={async () => {
                     if (user?.avatarBorder === "diamond") {
-                      alert("Mày đã có khung viền này rồi!");
+                      alert("Đạo hữu đã trang bị Lôi Vân Ấn từ trước rồi!");
                       return;
                     }
                     if (user && user.points < 500) {
-                      alert("Thiếu điểm rùi mày. Nâng cao kỹ năng để kiếm points.");
+                      alert("Không đủ Linh Thạch để quy đổi pháp bảo này!");
                       return;
                     }
                     try {
                       const newPoints = user!.points - 500;
-                      // Update Firestore database
                       const { dbService } = await import("../lib/firebase");
                       await dbService.updateUserProfile(user!.id, { 
                         points: newPoints,
                         avatarBorder: "diamond" 
                       });
-                      // Update local global store
                       store.updateCurrentUser({ 
                         points: newPoints,
                         avatarBorder: "diamond" 
                       }, true);
                       
-                      alert("Đã nâng cấp hào quang Kim cương lôi cuốn thành công!");
+                      alert("Kết ấn thành công! Hào quang Lôi Vân bao phủ thần thái phi phàm!");
                       setForceRender(prev => prev + 1);
                     } catch (e) {
                       console.error(e);
-                      alert("Lỗi khi mua khung viền.");
+                      alert("Lỗi khi cầu khấn tiên giới kết ấn.");
                     }
                   }}
                   disabled={user ? user.points < 500 : true}
-                  className="px-4 py-2 bg-cyan-550 bg-cyan-500 text-white rounded-xl text-xs font-bold shadow-md shadow-cyan-500/20 hover:shadow-cyan-500/40 active:scale-95 transition"
+                  className="px-4 py-2 bg-cyan-500 text-white rounded-xl text-xs font-bold shadow-md shadow-cyan-500/20 hover:shadow-cyan-500/40 active:scale-95 transition"
                 >
-                  {user?.avatarBorder === "diamond" ? "Đã Trang Bị" : "Mua Ngay"}
+                  {user?.avatarBorder === "diamond" ? "Đã Khắc Ấn" : "Luyện Pháp Bảo"}
                 </button>
               </div>
             </div>
@@ -2973,24 +2971,24 @@ export default function StudentDashboard() {
                     <Crown className="w-6 h-6 animate-pulse" />
                   </span>
                   <span className="px-3 py-1 bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded-full text-xs font-bold">
-                    Danh Hiệu
+                    Tiên Mục Phong Hiệu
                   </span>
                 </div>
-                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Danh Hiệu "Kỳ Tài"</h4>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Phong Hiệu 'Bất Bại Kiếm Thần'</h4>
                 <p className="text-xs opacity-70 mb-4 min-h-[40px]">
-                  Danh xưng "Kỳ Tài" độc nhất vô nhị. Khi đeo vào, tên của mày trên bảng xếp hạng sẽ hiển thị cùng với sự tôn quí sang trọng!
+                  Khắc họa tôn danh 'Bất Bại Kiếm Thần' rực sắc vàng kim chói lọi ngay dưới tiên hiệu võ công của đạo hữu trên bảng xếp hạng!
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
-                <span className="font-extrabold text-base text-emerald-600 dark:text-emerald-400">300 pts</span>
+                <span className="font-extrabold text-base text-emerald-600 dark:text-emerald-400">300 Linh Thạch (pts)</span>
                 <button
                   onClick={async () => {
-                    if (user?.title === "Kỳ Tài") {
-                      alert("Mày đã trang bị danh hiệu Kỳ Tài rồi!");
+                    if (user?.title === "Bất Bại Kiếm Thần") {
+                      alert("Tôn tính đại danh của đạo hữu đã vang danh muôn thuở rồi!");
                       return;
                     }
                     if (user && user.points < 300) {
-                      alert("Cần 300 pts để sở hữu danh xưng này!");
+                      alert("Linh thạch trống rỗng, không đủ mời thiên giới lập chiếu sắc phong!");
                       return;
                     }
                     try {
@@ -2998,14 +2996,14 @@ export default function StudentDashboard() {
                       const { dbService } = await import("../lib/firebase");
                       await dbService.updateUserProfile(user!.id, { 
                         points: newPoints,
-                        title: "Kỳ Tài" 
+                        title: "Bất Bại Kiếm Thần" 
                       });
                       store.updateCurrentUser({ 
                         points: newPoints,
-                        title: "Kỳ Tài" 
+                        title: "Bất Bại Kiếm Thần" 
                       }, true);
                       
-                      alert("Mày đã chính thức được sắc phong danh hiệu 'Kỳ Tài'!");
+                      alert("Chiếu chỉ hạ phàm! Đạo hữu chính thức được phong hiệu 'Bất Bại Kiếm Thần' lẫy lừng khánh hạ!");
                       setForceRender(prev => prev + 1);
                     } catch (e) {
                       console.error(e);
@@ -3014,7 +3012,7 @@ export default function StudentDashboard() {
                   disabled={user ? user.points < 300 : true}
                   className="px-4 py-2 bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/40 active:scale-95 transition"
                 >
-                  {user?.title === "Kỳ Tài" ? "Đã Đeo" : "Mua Ngay"}
+                  {user?.title === "Bất Bại Kiếm Thần" ? "Đã Sắc Phong" : "Cầu Phong Hiệu"}
                 </button>
               </div>
             </div>
@@ -3028,24 +3026,24 @@ export default function StudentDashboard() {
                     <Heart className="w-6 h-6 animate-pulse fill-current" />
                   </span>
                   <span className="px-3 py-1 bg-red-500/20 text-red-700 dark:text-red-300 rounded-full text-xs font-bold">
-                    Trang Trí
+                    Tâm Linh Chi Kính
                   </span>
                 </div>
-                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Trái Tim Nồng Nhiệt</h4>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Xích Tâm Linh Ấn (Trái Tim Nhiệt Huyết)</h4>
                 <p className="text-xs opacity-70 mb-4 min-h-[40px]">
-                  Mua biểu hiệu Trái Tim đỏ thắm ngay kế bên tài khoản của mày biểu thị lòng nhiệt huyết học tập vô bờ bến!
+                  Khiến một trái tim tình nghĩa trường tồn đỏ thẫm chiếu diệu kề vai tên tuổi biểu lộ lòng trân quý võ môn mãnh liệt tuyệt đối!
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
-                <span className="font-extrabold text-base text-red-600 dark:text-red-400">200 pts</span>
+                <span className="font-extrabold text-base text-red-600 dark:text-red-400">200 Linh Thạch (pts)</span>
                 <button
                   onClick={async () => {
                     if (user?.isSchoolLover) {
-                      alert("Mày đã sở hữu hiệu ứng Trái Tim rồi!");
+                      alert("Đạo tâm của mày đã mang sẵn lòng nhiệt huyết xích tâm hảo hữu rồi!");
                       return;
                     }
                     if (user && user.points < 200) {
-                      alert("Mày cần tích lũy tối thiểu 200 pts!");
+                      alert("Thiếu hụt Linh thạch rồi mày hỡi!");
                       return;
                     }
                     try {
@@ -3059,9 +3057,9 @@ export default function StudentDashboard() {
                         points: newPoints,
                         isSchoolLover: true 
                       }, true);
-                      setDbUsers(prev => prev.map(u => u.id === user!.id ? { ...u, isSchoolLover: true } : u));
+                      setDbUsers(prev => prev.map(item => item.id === user!.id ? { ...item, isSchoolLover: true } : item));
                       
-                      alert("Hiển thị Trái Tim Nồng Nhiệt thành công!");
+                      alert("Khai ấn thành công! Xích Tâm Ấn của mày luôn rực cháy lửa học Stoic nhiệt huyết!");
                       setForceRender(prev => prev + 1);
                     } catch (e) {
                       console.error(e);
@@ -3070,7 +3068,179 @@ export default function StudentDashboard() {
                   disabled={user ? user.points < 200 : true}
                   className="px-4 py-2 bg-red-500 text-white rounded-xl text-xs font-bold shadow-md shadow-red-500/20 hover:shadow-red-500/40 active:scale-95 transition"
                 >
-                  {user?.isSchoolLover ? "Đã Kích Hoạt" : "Mua Ngay"}
+                  {user?.isSchoolLover ? "Đã Khai Ấn" : "Khai Mở Tiên Ấn"}
+                </button>
+              </div>
+            </div>
+
+            {/* Item 7 [NEW]: Tẩy Tủy Kỳ Kinh Linh Độc (Reset Hard Cards) */}
+            <div className="glass p-6 rounded-2xl border border-teal-500/20 hover:border-teal-500/40 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-teal-500/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-3 bg-teal-500/10 rounded-xl text-teal-500">
+                    <RefreshCw className="w-6 h-6 animate-spin-slow" />
+                  </span>
+                  <span className="px-3 py-1 bg-teal-500/20 text-teal-700 dark:text-teal-300 rounded-full text-xs font-bold">
+                    Tẩy Tủy Đan Dược
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Tẩy Tủy Ngộ Tính Linh Đan (Xóa Thẻ Khó)</h4>
+                <p className="text-xs opacity-70 mb-4 min-h-[40px]">
+                  Tẩy sạch tâm trí đang bế tắc vì các Thẻ khó! Chuyển hóa toàn bộ Thẻ bài bị đánh dấu Khó (Hard Cards) trở lại trạng thái thanh tịnh ban đầu để tu luyện dễ thở hơn.
+                </p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
+                <span className="font-extrabold text-base text-teal-600 dark:text-teal-400">300 Linh Thạch (pts)</span>
+                <button
+                  onClick={async () => {
+                    if (user && user.points < 300) {
+                      alert("Không đủ Linh Thạch để mua vị đan dược thanh gột tâm can này!");
+                      return;
+                    }
+                    try {
+                      const currentDecks = store.getDecks();
+                      let modifiedCount = 0;
+                      currentDecks.forEach(deck => {
+                        deck.cards.forEach((card: any) => {
+                          if (card.isHard) {
+                            card.isHard = false;
+                            card.mastery = Math.max(card.mastery, 40); // Reset to gentle mastery level
+                            modifiedCount++;
+                          }
+                        });
+                      });
+
+                      if (modifiedCount === 0) {
+                        alert("Đại não đang thanh tịnh rực rỡ, đạo hữu không sở hữu Thẻ bài Khó nào cần hóa giải cả!");
+                        return;
+                      }
+
+                      // Save changes to localStorage and Firebase
+                      saveLocalUserDecks();
+                      const newPoints = user!.points - 300;
+                      const { dbService } = await import("../lib/firebase");
+                      await dbService.updateUserProfile(user!.id, { points: newPoints });
+                      store.updateCurrentUser({ points: newPoints });
+
+                      alert(`Kích hoạt Tẩy Tủy Ngộ Tính thành công! Gột sạch ${modifiedCount} chướng ngại thẻ khó về mức dễ luyện.`);
+                      setForceRender(prev => prev + 1);
+                    } catch (e) {
+                      console.error(e);
+                      alert("Gặp lỗi khi tẩy tủy thẻ.");
+                    }
+                  }}
+                  disabled={user ? user.points < 300 : true}
+                  className="px-4 py-2 bg-teal-555 bg-teal-500 text-white rounded-xl text-xs font-bold shadow-md shadow-teal-500/20 hover:shadow-teal-500/40 active:scale-95 transition"
+                >
+                  Tẩy Tủy
+                </button>
+              </div>
+            </div>
+
+            {/* Item 8 [NEW]: Thiên Hương Thần Hành Phù (Thần Tốc Streak +10 Ngày) */}
+            <div className="glass p-6 rounded-2xl border border-orange-500/20 hover:border-orange-500/40 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-orange-500/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-3 bg-orange-500/10 rounded-xl text-orange-500">
+                    <Flame className="w-6 h-6 animate-bounce" />
+                  </span>
+                  <span className="px-3 py-1 bg-orange-500/20 text-orange-700 dark:text-orange-300 rounded-full text-xs font-bold">
+                    Khởi Hành Thần Tốc
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Địa Hương Thần Hành Phù (Streak +10 Ngày)</h4>
+                <p className="text-xs opacity-70 mb-4 min-h-[40px]">
+                  Dán ngay Thần Hành Phù để gia tăng thần tốc +10 ngày Chuỗi Streak ôn luyện liên tục, mang lại phong thái đại đức tu sĩ đĩnh đạc!
+                </p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
+                <span className="font-extrabold text-base text-orange-600 dark:text-orange-400">350 Linh Thạch (pts)</span>
+                <button
+                  onClick={async () => {
+                    if (user && user.points < 350) {
+                      alert("Thiếu Linh Thạch thâm hậu rồi mày ơi. Chăm chỉ luyện bài chút đi nha!");
+                      return;
+                    }
+                    try {
+                      const newPoints = user!.points - 350;
+                      const newStreak = (user!.streak || 0) + 10;
+                      const { dbService } = await import("../lib/firebase");
+                      await dbService.updateUserProfile(user!.id, { 
+                        points: newPoints,
+                        streak: newStreak
+                      });
+                      store.updateCurrentUser({ 
+                        points: newPoints,
+                        streak: newStreak
+                      }, true);
+
+                      alert("Vút! Thần Hành Phù bốc cháy ngụt trời, tu vi Streak kéo dài thăng tiến thêm +10 ngày rực rỡ!");
+                      setForceRender(prev => prev + 1);
+                    } catch (e) {
+                      console.error(e);
+                    }
+                  }}
+                  disabled={user ? user.points < 350 : true}
+                  className="px-4 py-2 bg-orange-500 text-white rounded-xl text-xs font-bold shadow-md shadow-orange-500/20 hover:shadow-orange-500/40 active:scale-95 transition"
+                >
+                  Dán Phù Mua
+                </button>
+              </div>
+            </div>
+
+            {/* Item 9 [NEW]: Chí Tôn Thần Hoàng Pháp Diệp (Tôn Hiệu Tối Cao Giang Hồ) */}
+            <div className="glass p-6 rounded-2xl border border-rose-500/20 hover:border-rose-500/40 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-24 h-24 bg-rose-500/5 rounded-full group-hover:scale-150 transition-transform duration-500" />
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-3 bg-rose-500/10 rounded-xl text-rose-500">
+                    <Award className="w-6 h-6 animate-pulse" />
+                  </span>
+                  <span className="px-3 py-1 bg-rose-500/20 text-rose-700 dark:text-rose-300 rounded-full text-xs font-bold">
+                    Tuyệt Phẩm Tự Cổ
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold mb-1 text-stone-800 dark:text-stone-200">Chiếu Thư 'Chí Tôn Kiếm Ma' (Phong Hiệu Tột Đỉnh)</h4>
+                <p className="text-xs opacity-70 mb-4 min-h-[40px]">
+                  Phong sắc chiêu thư quyền bính tối cao sắc phong danh hiệu đệ nhất độc tôn 'Chí Tôn Kiếm Ma' làm vạn kiếm tề quy, quỳ gối tôn kính mỗi khi đạo hữu xuất lộ tiên bảng!
+                </p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-stone-200/50 dark:border-white/5 flex items-center justify-between">
+                <span className="font-extrabold text-base text-rose-600 dark:text-rose-400">750 Linh Thạch (pts)</span>
+                <button
+                  onClick={async () => {
+                    if (user?.title === "Chí Tôn Kiếm Ma") {
+                      alert("Tôn tính tôn nghiêm của mày đã lừng danh đỉnh thiên lập địa rồi!");
+                      return;
+                    }
+                    if (user && user.points < 750) {
+                      alert("Tích trữ cho đủ 750 Linh Thạch rồi tiên lục giáng trần lập đạo sắc phong nhé đạo hữu!");
+                      return;
+                    }
+                    try {
+                      const newPoints = user!.points - 750;
+                      const { dbService } = await import("../lib/firebase");
+                      await dbService.updateUserProfile(user!.id, { 
+                        points: newPoints,
+                        title: "Chí Tôn Kiếm Ma" 
+                      });
+                      store.updateCurrentUser({ 
+                        points: newPoints,
+                        title: "Chí Tôn Kiếm Ma" 
+                      }, true);
+
+                      alert("Huyết vụ ngập tràn, vạn kiếm tề minh, kiếm ma tuyệt kỹ! Bản tôn chính thức đắc đạo nhận phong trần 'Chí Tôn Kiếm Ma'!");
+                      setForceRender(prev => prev + 1);
+                    } catch (e) {
+                      console.error(e);
+                    }
+                  }}
+                  disabled={user ? user.points < 750 : true}
+                  className="px-4 py-2 bg-rose-500 text-white rounded-xl text-xs font-bold shadow-md shadow-rose-500/20 hover:shadow-rose-500/40 active:scale-95 transition"
+                >
+                  Đắc Đạo Sắc Phong
                 </button>
               </div>
             </div>
